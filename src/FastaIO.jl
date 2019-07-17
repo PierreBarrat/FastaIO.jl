@@ -467,9 +467,9 @@ function write(fw::FastaWriter, c)
     elseif fw.in_seq && ch == '>'
         error("character '>' not allowed in sequence data (entry $(fw.entry) of FASTA input)")
     end
-    if fw.pos == 80
+    if fw.pos == 80000
         if !fw.in_seq
-            warn("description line longer than 80 characters (entry $(fw.entry) of FASTA input)")
+            warn("description line longer than 80000 characters (entry $(fw.entry) of FASTA input)")
         else
             write(fw.f, '\n')
             fw.pos = 0
@@ -564,7 +564,7 @@ function writefastaseq(io::IO, seq, entry::Int, nl::Bool = true)
     i = 0
     entry_chars = 0
     for c in seq
-        if i == 80
+        if i == 80000
             write(io, '\n')
             i = 0
         end
@@ -597,8 +597,8 @@ function writefasta(io::IO, data)
         if findfirst(isequal('\n'), desc) ∉ (nothing, 0) # TODO: remove 0 when support for julia 0.6 is dropped
             error("newlines are not allowed within description (entry $entry of FASTA input)")
         end
-        if length(desc) > 79
-            warn("description line longer than 80 characters (entry $entry of FASTA input)")
+        if length(desc) > 80000-1
+            warn("description line longer than 80000 characters (entry $entry of FASTA input)")
         end
         println(io, ">", desc)
         entry_chars = writefastaseq(io, seq, entry)
