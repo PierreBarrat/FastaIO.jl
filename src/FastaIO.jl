@@ -216,7 +216,7 @@ function _next_step(fr::FastaReader)
         error("invalid FASTA file: empty description")
     end
     name = String(fr.lbuffer[2:fr.lbuf_sz])
-    isascii(name) || error("invalid non-ASCII description in FASTA file")
+    # isascii(name) || error("invalid non-ASCII description in FASTA file")
     fr.mbuf_sz = 0
     while true
         readline(fr)
@@ -440,7 +440,7 @@ will result in the same file as above.
 """
 function write(fw::FastaWriter, c)
     ch = convert(Char, c)
-    isascii(ch) || error("invalid (non-ASCII) character: $c (entry $(fw.entry) of FASTA input)")
+    # isascii(ch) || error("invalid (non-ASCII) character: $c (entry $(fw.entry) of FASTA input)")
     if ch == '\n' && !fw.at_start
         fw.parsed_nl = true
         if !fw.in_seq
@@ -519,7 +519,7 @@ end
 function writeentry(fw::FastaWriter, desc::AbstractString, seq)
     !fw.at_start && write(fw, '\n')
     desc = strip(String(desc))
-    isascii(desc) || error("description must be ASCII (entry $(fw.entry+1) of FASTA input)")
+    # isascii(desc) || error("description must be ASCII (entry $(fw.entry+1) of FASTA input)")
     if findfirst(isequal('\n'), desc) ∉ (nothing, 0) # TODO: remove 0 when support for julia 0.6 is dropped
         error("newlines are not allowed within description (entry $(fw.entry+1) of FASTA input)")
     end
@@ -569,7 +569,7 @@ function writefastaseq(io::IO, seq, entry::Int, nl::Bool = true)
             i = 0
         end
         ch = convert(Char, c)
-        isascii(ch) || error("invalid (non-ASCII) character: $c (entry $entry of FASTA input)")
+        # isascii(ch) || error("invalid (non-ASCII) character: $c (entry $entry of FASTA input)")
         isspace(ch) && continue
         ch != '>' || error("character '>' not allowed in sequence data (entry $entry of FASTA input)")
         write(io, ch)
@@ -590,7 +590,7 @@ function writefasta(io::IO, data)
     for (desc, seq) in data
         entry += 1
         desc = strip(String(desc))
-        isascii(desc) || error("description must be ASCII (entry $entry of FASTA input)")
+        # isascii(desc) || error("description must be ASCII (entry $entry of FASTA input)")
         if isempty(desc)
             error("empty description (entry $entry of FASTA input")
         end
